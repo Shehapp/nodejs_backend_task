@@ -2,107 +2,68 @@ const {getProducts, getProductById, createProduct, updateProduct, deleteProduct}
 const {getCategoryByIdService} = require('./category_service');
 
 
-const getAllProductsService = (callback) => {
-    getProducts((err, res) => {
-        if (err) {
-            //TODO: log error
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            if(res.length === 0){
-                callback({status: 404, message: 'No products found'}, null);
-            } else {
-                callback(null, res);
-            }
-        }
-    });
-}
-
-const getProductByIdService = (id, callback) => {
-    getProductById(id, (err, res) => {
-        if (err) { 
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        }
-        if(res.length === 0){
-            callback({status: 404, message: 'Product not found'}, null);
-        } else {
-            callback(null, res);
-        }
+const getAllProductsService =async () => {
+    const products = await getProducts();
+    if(products.length === 0){
+        throw {status: 404, message: 'No products found'};
     }
-    );
+    return products;
 }
 
-const createProductService = (req, callback) => {
+const getProductByIdService =async (id) => {
+
+    const product = await getProductById(id);
+    if(product.length === 0){
+        throw {status: 404, message: 'Product not found'};
+    }
+    return product;
+
+}
+
+const createProductService =async (req) => {
     const { name, description, price, stock, category_id } = req.body;
     const values = [name, description, price, stock,category_id];
 
     
     if (!name || !description || !price || !stock || !category_id) {
-        callback({status: 400, message: 'Please fill in all fields'}, null);
-        return;
+        throw {status: 400, message: 'Please fill in all fields'};
     }
 
-     getCategoryByIdService(category_id, (err, _) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        createProduct(values, (err, res) => {
-            if (err) {
-                callback({status: 500, message: 'Internal Server Error'}, null);
-            } else {
-                callback(null, res);
-            }
-        }
-        );
-    });    
 
+    // if category_id is not valid, throw error
+    await getCategoryByIdService(category_id);
 
+    const product = await createProduct(values);
+    return product;
 }
 
-const updateProductService = (id, req, callback) => {
+const updateProductService = async(id, req) => {
     const { name, description, price, stock, category_id } = req.body;
     const values = [name, description, price, stock,category_id, id];
 
     if (!name || !description || !price || !stock || !category_id) {
-        callback({status: 400, message: 'Please fill in all fields'}, null);
-        return;
+        throw {status: 400, message: 'Please fill in all fields'};
     }
 
-    getCategoryByIdService(category_id, (err, res) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        updateProduct(values, (err, res) => {
-            if (err) {
-                callback({status: 500, message: 'Internal Server Error'}, null);
-            } else {
-                if(res.affectedRows === 0){
-                    callback({status: 404, message: 'Product not found'}, null);
-                } else {
-                    callback(null, res);
-                }
-            }
-        }
-        );
-    });
 
+
+    // if category_id is not valid, throw error
+    await getCategoryByIdService(category_id);
+
+    const product = await updateProduct(values);
+    if(product.affectedRows === 0){
+        throw {status: 404, message: 'Product not found'};
+    }
+    return product;
     
 }
 
-const deleteProductService = (id, callback) => {
-    deleteProduct(id, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            if(res.affectedRows === 0){
-                callback({status: 404, message: 'Product not found'}, null);
-            } else {
-                callback(null, res);
-            }
-        }
+const deleteProductService =async (id) => {
+
+    const res = await deleteProduct(id);
+    if(res.affectedRows === 0){
+        throw {status: 404, message: 'Product not found'};
     }
-    );
 }
 
 module.exports = {
