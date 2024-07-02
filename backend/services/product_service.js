@@ -73,7 +73,7 @@ const updateProductService = (id, req, callback) => {
         }
     });
 
-    updateProduct(id, values, (err, res) => {
+    updateProduct(values, (err, res) => {
         if (err) {
             callback({status: 500, message: 'Internal Server Error'}, null);
         } else {
@@ -101,3 +101,10 @@ const deleteProductService = (id, callback) => {
     }
     );
 }
+
+module.exports = {
+    getAllProductsService,
+    getProductByIdService,
+    createProductService,
+    updateProductService,
+    deleteProductService};

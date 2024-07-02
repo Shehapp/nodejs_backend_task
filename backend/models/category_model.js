@@ -1,4 +1,4 @@
-const db = require('../config/database.js');
+const db = require('../config_db/database.js');
 
 
 const getCategories = (callback) => {
@@ -23,15 +23,7 @@ const getCategoryById = (id, callback) => {
     });
 };
 
-const createCategory = (req, callback) => {
-
-    const { name, description } = req.body;
-    const values = [name, description];
-
-    if (!name || !description) {
-        callback({ message: 'Please fill in all fields' }, null);
-        return;
-    }
+const createCategory = (values, callback) => {
 
     const sql = 'INSERT INTO categories (name, description) VALUES (?)';
     db.query(sql, [values], (err, res) => {
@@ -43,15 +35,7 @@ const createCategory = (req, callback) => {
     });
 }
 
-const updateCategory  = (id, req, callback) => {
-
-    const { name, description } = req.body;
-    const values = [name, description, id];
-    
-    if (!name || !description) {
-        callback({ message: 'Please fill in all fields' }, null);
-        return;
-    }
+const updateCategory  = (values, callback) => {
 
     const sql = 'UPDATE categories SET name = ?, description = ? WHERE category_id = ?';
     db.query(sql, values, (err, res) => {

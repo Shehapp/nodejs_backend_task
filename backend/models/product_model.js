@@ -1,4 +1,4 @@
-const db = require('../config/database.js');
+const db = require('../config_db/database.js');
 const { getCategoryById } = require('./category_model.js');
 
 const getProducts = (callback) => {
@@ -29,29 +29,7 @@ const getProductById = (id, callback) => {
     });
 };
 
-const createProduct = (req, callback) => {
-
-    const { name, description, price, stock, category_id } = req.body;
-    const values = [name, description, price, stock, category_id];
-
-    //check undefined values
-    if (!name || !description || !price || !stock || !category_id) {
-        callback({ message: 'Please fill in all fields' }, null);
-        return;
-    }
-
-    // [TODO]: check if category exists
-    getCategoryById(category_id, (err, res) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        if (res.length === 0) {
-            callback({ message: 'Category does not exist' }, null);
-            return;
-        }
-    });
-    
+const createProduct = (values, callback) => {
 
     const sql = 'INSERT INTO products (name, description, price, stock, category_id) VALUES (?)';
     db.query(sql, [values], (err, res) => {
@@ -63,29 +41,8 @@ const createProduct = (req, callback) => {
     });
 }
 
-const updateProduct = (id, req, callback) => {
-
-    const { name, description, price, stock, category_id } = req.body;
-    const values = [name, description, price, stock,category_id, id];
-
-    if (!name || !description || !price || !stock || !category_id) {
-        callback({ message: 'Please fill in all fields' }, null);
-        return;
-    }
-
-    getCategoryById(category_id, (err, res) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        if (res.length === 0) {
-            callback({ message: 'Category does not exist' }, null);
-            return;
-        }
-    });
-
-
-
+const updateProduct = ( values, callback) => {
+    
     const sql = 'UPDATE products SET name = ?, description = ?, price = ?, stock = ?, category_id = ? WHERE product_id = ?';
     db.query(sql, values, (err, res) => {
         if (err) {

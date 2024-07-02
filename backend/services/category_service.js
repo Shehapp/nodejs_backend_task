@@ -87,3 +87,12 @@ const deleteCategoryService = (id, callback) => {
     }
     );
 }
+
+
+module.exports = {
+    getAllCategoriesService,
+    getCategoryByIdService,
+    createCategoryService,
+    updateCategoryService,
+    deleteCategoryService
+}
