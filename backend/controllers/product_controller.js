@@ -5,8 +5,10 @@ const getAllProducts = (req, res) => {
     getAllProductsService((err, result) => {
         if (err) {
             res.status(err.status).send(err.message);
+            return;
         }
         res.status(200).send(result);
+        
     }
     );
 }
@@ -16,8 +18,10 @@ const getProductById = (req, res) => {
     getProductByIdService(id, (err, result) => {
         if (err) {
             res.status(err.status).send(err.message);
+            return;
         }
         res.status(200).send(result);
+        
     }
     );
 }
@@ -25,7 +29,8 @@ const getProductById = (req, res) => {
 const createProduct = (req, res) => {
     createProductService(req, (err, result) => {
         if (err) {
-            res.status(err.status).send(err.message);   
+            res.status(err.status).send(err.message);  
+            return; 
         }
         res.header('Location', '/products/' + result.insertId);
         res.status(201).send();
@@ -38,6 +43,7 @@ const updateProduct = (req, res) => {
     updateProductService(id, req, (err, result) => {
         if (err) {
             res.status(err.status).send(err.message);
+            return;
         }
         res.status(200).send();
     }
@@ -49,6 +55,7 @@ const deleteProduct = (req, res) => {
     deleteProductService(id, (err, result) => {
         if (err) {
             res.status(err.status).send(err.message);
+            return;
         }
         res.status(200).send();
     }

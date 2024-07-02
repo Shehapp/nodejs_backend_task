@@ -18,6 +18,7 @@ const getCategoryByIdService = (id, callback) => {
     getCategoryById(id, (err, res) => {
         if (err) {
             callback({status: 500, message: 'Internal Server Error'}, null);
+            return;
         }
         if(res.length === 0){
             callback({status: 404, message: 'Category not found'}, null);

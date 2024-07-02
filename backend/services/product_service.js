@@ -35,26 +35,28 @@ const createProductService = (req, callback) => {
     const { name, description, price, stock, category_id } = req.body;
     const values = [name, description, price, stock,category_id];
 
+    
     if (!name || !description || !price || !stock || !category_id) {
         callback({status: 400, message: 'Please fill in all fields'}, null);
         return;
     }
 
-    getCategoryByIdService(category_id, (err, res) => {
+     getCategoryByIdService(category_id, (err, _) => {
         if (err) {
             callback(err, null);
             return;
         }
-    });
-
-    createProduct(values, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            callback(null, res);
+        createProduct(values, (err, res) => {
+            if (err) {
+                callback({status: 500, message: 'Internal Server Error'}, null);
+            } else {
+                callback(null, res);
+            }
         }
-    }
-    );
+        );
+    });    
+
+
 }
 
 const updateProductService = (id, req, callback) => {
@@ -71,20 +73,21 @@ const updateProductService = (id, req, callback) => {
             callback(err, null);
             return;
         }
-    });
-
-    updateProduct(values, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            if(res.affectedRows === 0){
-                callback({status: 404, message: 'Product not found'}, null);
+        updateProduct(values, (err, res) => {
+            if (err) {
+                callback({status: 500, message: 'Internal Server Error'}, null);
             } else {
-                callback(null, res);
+                if(res.affectedRows === 0){
+                    callback({status: 404, message: 'Product not found'}, null);
+                } else {
+                    callback(null, res);
+                }
             }
         }
-    }
-    );
+        );
+    });
+
+    
 }
 
 const deleteProductService = (id, callback) => {
