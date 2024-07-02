@@ -1,65 +1,71 @@
 const {getAllProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService} = require('../services/product_service');
 
 
-const getAllProducts = (req, res) => {
-    getAllProductsService((err, result) => {
-        if (err) {
-            res.status(err.status).send(err.message);
-            return;
-        }
-        res.status(200).send(result);
-        
+const getAllProducts = async(req, res) => {
+
+    try{
+        const products = await getAllProductsService();
+        res.status(200).send(products);
+    }catch(err){
+        if(err.status === undefined)
+            res.status(500).send('Internal Server Error');
+        else 
+           res.status(err.status).send(err.message);
     }
-    );
+
 }
 
-const getProductById = (req, res) => {
+const getProductById = async(req, res) => {
     const id = req.params.id;
-    getProductByIdService(id, (err, result) => {
-        if (err) {
-            res.status(err.status).send(err.message);
-            return;
-        }
-        res.status(200).send(result);
-        
+    try{
+        const product = await getProductByIdService(id);
+        res.status(200).send(product);
+    }catch(err){
+        if(err.status === undefined)
+            res.status(500).send('Internal Server Error');
+        else 
+           res.status(err.status).send(err.message);
     }
-    );
 }
 
-const createProduct = (req, res) => {
-    createProductService(req, (err, result) => {
-        if (err) {
-            res.status(err.status).send(err.message);  
-            return; 
-        }
-        res.header('Location', '/products/' + result.insertId);
+const createProduct = async(req, res) => {
+
+    try{
+        const product = await createProductService(req);
+        res.header('Location', `/products/${product.insertId}`);
         res.status(201).send();
+    }catch(err){
+        if(err.status === undefined)
+            res.status(500).send('Internal Server Error');
+        else 
+           res.status(err.status).send(err.message);
     }
-    );
 }
 
-const updateProduct = (req, res) => {
+const updateProduct = async(req, res) => {
     const id = req.params.id;
-    updateProductService(id, req, (err, result) => {
-        if (err) {
-            res.status(err.status).send(err.message);
-            return;
-        }
+    try{
+        const product = await updateProductService(id, req);
         res.status(200).send();
+    }catch(err){
+        if(err.status === undefined)
+            res.status(500).send('Internal Server Error');
+        else 
+           res.status(err.status).send(err.message);
     }
-    );
 }
 
-const deleteProduct = (req, res) => {
+const deleteProduct = async(req, res) => {
     const id = req.params.id;
-    deleteProductService(id, (err, result) => {
-        if (err) {
-            res.status(err.status).send(err.message);
-            return;
-        }
+    try{
+        const product = await deleteProductService(id);
         res.status(200).send();
+    }catch(err){
+        if(err.status === undefined)
+            res.status(500).send('Internal Server Error');
+        else 
+           res.status(err.status).send(err.message);
     }
-    );
 }
 
 

@@ -1,92 +1,70 @@
 const {getCategories, getCategoryById, createCategory, updateCategory, deleteCategory}=require('../models/category_model');
 
-const getAllCategoriesService = (callback) => {
-    getCategories((err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
+const getAllCategoriesService = async () => {
+
+        const categories = await getCategories();
+        if(categories.length === 0){
+            throw {status: 404, message: 'No categories found'};
         }
-        if(res.length === 0){
-            callback({status: 404, message: 'No categories found'}, null);
-        } else {
-            callback(null, res);
-        }
-    }
-    );
+        return categories;
+
 }
 
-const getCategoryByIdService = (id, callback) => {
-    getCategoryById(id, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-            return;
-        }
-        if(res.length === 0){
-            callback({status: 404, message: 'Category not found'}, null);
-        } else {
-            callback(null, res);
-        }
+const getCategoryByIdService =async (id) => {
+
+    const category = await getCategoryById(id);
+    if(category.length === 0){
+        throw {status: 404, message: 'Category not found'};
     }
-    );
+    return category;
 }
 
 
-const createCategoryService = (req, callback) => {
+const createCategoryService = async(req) => {
     const { name, description } = req.body;
     const values = [name, description];
 
     if (!name || !description) {
-        callback({status: 400, message: 'Please fill in all fields'}, null);
-        return;
+        throw {status: 400, message: 'Please fill in all fields'};
     }
-
-    createCategory(values, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            callback(null, res);
-        }
-    }
-    );
+ 
+    const category = await createCategory(values);
+    return category;
 }
 
 
-const updateCategoryService = (id, req, callback) => {
+const updateCategoryService =async (id, req) => {
     const { name, description } = req.body;
     const values = [name, description, id];
 
     if (!name || !description) {
-        callback({status: 400, message: 'Please fill in all fields'}, null);
-        return;
+        throw {status: 400, message: 'Please fill in all fields'};
     }
 
-    updateCategory(values, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            if(res.affectedRows === 0){
-                callback({status: 404, message: 'Category not found'}, null);
-            }
-            else {
-                callback(null, res);
-            }
-        }
+
+    const category = await updateCategory(values);
+    if(category.affectedRows === 0){
+        throw {status: 404, message: 'Category not found'};
     }
-    );
+    return category;
+
+
 }
 
-const deleteCategoryService = (id, callback) => {
-    deleteCategory(id, (err, res) => {
-        if (err) {
-            callback({status: 500, message: 'Internal Server Error'}, null);
-        } else {
-            if(res.affectedRows === 0){
-                callback({status: 404, message: 'Category not found'}, null);
-            } else {
-                callback(null, res);
-            }
-        }
+const deleteCategoryService = async(id) => {
+    var category = null;
+    try{
+     category= await deleteCategory(id);
+    }catch(err){
+        console.log(err);
+        throw {status: 400,message:"bad request"};
     }
-    );
+    console.log(category);
+    if(category && category.affectedRows === 0){
+        throw {status: 404, message: 'Category not found'};
+    }
+    console.log(category);
+    return category;
 }
 
 
