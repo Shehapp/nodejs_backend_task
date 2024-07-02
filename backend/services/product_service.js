@@ -45,8 +45,6 @@ const updateProductService = async(id, req) => {
         throw {status: 400, message: 'Please fill in all fields'};
     }
 
-
-
     // if category_id is not valid, throw error
     await getCategoryByIdService(category_id);
 

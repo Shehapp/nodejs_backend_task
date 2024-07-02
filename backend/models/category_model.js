@@ -1,5 +1,4 @@
-const db = require('../config_db/database.js');
-
+const db = require('../utils/database.js');
 
 const getCategories =async () => {
     return new Promise((resolve, reject) => {

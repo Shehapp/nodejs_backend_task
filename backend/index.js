@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./config_db/database.js');
+const db = require('./utils/database.js');
 const productRouter = require('./routers/product_router');
 const categoryRouter = require('./routers/category_router');
 const app = express();

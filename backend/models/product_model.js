@@ -1,4 +1,4 @@
-const db = require('../config_db/database.js');
+const db = require('../utils/database.js');
 const { getCategoryById } = require('./category_model.js');
 
 const getProducts = async () => {

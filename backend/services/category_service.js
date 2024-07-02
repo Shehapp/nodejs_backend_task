@@ -1,17 +1,14 @@
 const {getCategories, getCategoryById, createCategory, updateCategory, deleteCategory}=require('../models/category_model');
 
 const getAllCategoriesService = async () => {
-
-        const categories = await getCategories();
-        if(categories.length === 0){
-            throw {status: 404, message: 'No categories found'};
-        }
-        return categories;
-
+    const categories = await getCategories();
+    if(categories.length === 0){
+         throw {status: 404, message: 'No categories found'};
+    }
+    return categories;
 }
 
 const getCategoryByIdService =async (id) => {
-
     const category = await getCategoryById(id);
     if(category.length === 0){
         throw {status: 404, message: 'Category not found'};
@@ -41,14 +38,11 @@ const updateCategoryService =async (id, req) => {
         throw {status: 400, message: 'Please fill in all fields'};
     }
 
-
     const category = await updateCategory(values);
     if(category.affectedRows === 0){
         throw {status: 404, message: 'Category not found'};
     }
     return category;
-
-
 }
 
 const deleteCategoryService = async(id) => {
@@ -56,14 +50,14 @@ const deleteCategoryService = async(id) => {
     try{
      category= await deleteCategory(id);
     }catch(err){
-        console.log(err);
         throw {status: 400,message:"bad request"};
     }
-    console.log(category);
+
+    //can't delete category that products are associated with
     if(category && category.affectedRows === 0){
         throw {status: 404, message: 'Category not found'};
     }
-    console.log(category);
+
     return category;
 }
 

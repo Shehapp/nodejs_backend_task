@@ -1,15 +1,13 @@
 const { getAllCategoriesService,getCategoryByIdService, createCategoryService, updateCategoryService, deleteCategoryService } = require('../services/category_service');
+const { handleErrors } = require('../utils/error_handler.js');
+
 
 const getAllCategories = async(req, res) => {
-
     try{
         const categories = await getAllCategoriesService();
         res.status(200).send(categories);
     }catch(err){
-        if(err.status === undefined)
-            res.status(500).send('Internal Server Error');
-        else 
-           res.status(err.status).send(err.message);
+         await handleErrors(res,err);
     }
 }
 
@@ -20,12 +18,8 @@ const getCategoryById =async (req, res) => {
         const category = await getCategoryByIdService(id);
         res.status(200).send(category);
     }catch(err){
-        if(err.status === undefined)
-            res.status(500).send('Internal Server Error');
-        else 
-           res.status(err.status).send(err.message);
+        await handleErrors(res,err);
     }
-    
 }
 
 const createCategory =async (req, res) => {
@@ -34,12 +28,8 @@ const createCategory =async (req, res) => {
         res.header('Location', `/categories/${category.insertId}`);
         res.status(201).send();
     }catch(err){
-        if(err.status === undefined)
-            res.status(500).send('Internal Server Error');
-        else 
-           res.status(err.status).send(err.message);
+        await handleErrors(res,err);
     }
- 
 }
 
 const updateCategory = async(req, res) => {
@@ -48,10 +38,7 @@ const updateCategory = async(req, res) => {
         const category = await updateCategoryService(id, req);
         res.status(200).send();
     }catch(err){
-        if(err.status === undefined)
-            res.status(500).send('Internal Server Error');
-        else 
-           res.status(err.status).send(err.message);
+        await handleErrors(res,err);
     }
 }
 
@@ -61,10 +48,7 @@ const deleteCategory =async (req, res) => {
         const category = await deleteCategoryService(id);
         res.status(200).send();
     }catch(err){
-        if(err.status === undefined)
-            res.status(500).send('Internal Server Error');
-        else 
-           res.status(err.status).send(err.message);
+        await handleErrors(res,err);
     }
 }
 
