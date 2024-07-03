@@ -1,4 +1,4 @@
-# Backend Service
+# Product Management Module
 
 ## Description
 This is a backend service built with Node.js and Express, using Sequelize as an ORM for database operations. It includes authentication features with Passport.js and uses bcrypt for password hashing.
