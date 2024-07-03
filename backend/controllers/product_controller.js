@@ -25,7 +25,7 @@ const getProductById = async(req, res) => {
 const createProduct = async(req, res) => {
     try{
         const product = await createProductService(req);
-        res.header('Location', `/products/${product.insertId}`);
+        res.header('Location', `/products/${product.id}`);
         res.status(201).send();
     }catch(err){
         await handleErrors(res,err);

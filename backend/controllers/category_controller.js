@@ -25,7 +25,7 @@ const getCategoryById =async (req, res) => {
 const createCategory =async (req, res) => {
     try{
         const category = await createCategoryService(req);
-        res.header('Location', `/categories/${category.insertId}`);
+        res.header('Location', `/categories/${category.id}`);
         res.status(201).send();
     }catch(err){
         await handleErrors(res,err);

@@ -31,6 +31,7 @@ const createCategoryService = async(req) => {
         name: name,
         description: description
     });
+    console.log(category);
     return category;
 }
 
