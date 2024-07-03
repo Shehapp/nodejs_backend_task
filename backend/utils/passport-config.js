@@ -7,6 +7,7 @@ module.exports = function(passport) {
     { usernameField: 'email' },
     async function(email, password, done) {
       try {
+        console.log(email);
         var user = await getUserByEmailService(email);
         user = user[0];
         if (!user) {
