@@ -7,7 +7,6 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
 
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -31,7 +30,10 @@ app.use('/api/v0.1/categories', categoryRouter);
 app.use('/api/v0.1/auth', authRouter);
 
 
+const db  = require('./models');
 
-app.listen(8800, () => {
-    console.log('Server started at http://localhost:8800');
+db.sequelize.sync().then(() => {
+  app.listen(8800, () => {
+    console.log('Server is running on port 8800');
+  });
 });

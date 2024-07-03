@@ -7,8 +7,9 @@ module.exports = function(passport) {
     { usernameField: 'email' },
     async function(email, password, done) {
       try {
+        console.log(email);
         var user = await getUserByEmailService(email);
-        user = user[0];
+        user = user;
         if (!user) {
           return done(null, false, { message: 'Incorrect email.' });
         }
@@ -30,7 +31,7 @@ module.exports = function(passport) {
   passport.deserializeUser(async (email, done) => {
     try {
       const user = await getUserByEmailService(email);
-      done(null, user[0]);
+      done(null, user);
     } catch (err) {
       done(err);
     }

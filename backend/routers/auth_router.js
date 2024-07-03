@@ -11,14 +11,14 @@ router.post('/register',async(req, res) => {
         res.header('Location', `/users/${user.insertId}`);
         res.status(201).send();
     }catch(err){
-        console.log(err);
         await handleErrors(res,err);
     }
 })
 
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) {
+        res.status(401).json({ message: 'Authentication failed' });
         return next(err);
       }
       if (!user) {
@@ -36,6 +36,7 @@ router.post('/login', (req, res, next) => {
   router.post('/logout', (req, res, next) => {
     req.logout((err) => {
       if (err) {
+        res.status(500).json({ message: 'Logout failed' });
         return next(err);
       }
       res.status(200).json({ message: 'Logout successful' });

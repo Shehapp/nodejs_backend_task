@@ -5,6 +5,7 @@ const { handleErrors } = require('../utils/error_handler.js');
 const getAllProducts = async(req, res) => {
     try{
         const products = await getAllProductsService();
+        console.log(products);
         res.status(200).send(products);
     }catch(err){
         await handleErrors(res,err);
