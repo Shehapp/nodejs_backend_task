@@ -30,6 +30,7 @@ const addUserService = async (req) => {
         email: email,
         password: password
     });
+
     return user
 }
 throw {status: 409, message: 'User already exists'};
