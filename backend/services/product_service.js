@@ -3,7 +3,7 @@ const {getCategoryByIdService} = require('./category_service');
 
 const getAllProductsService =async () => {
     const products = await Product.findAll();
-    if(products.length === 0){
+    if(!products || products.length === 0){
         throw {status: 404, message: 'No products found'};
     }
     return products;
@@ -11,7 +11,7 @@ const getAllProductsService =async () => {
 
 const getProductByIdService =async (id) => {
     const product = await Product.findByPk(id);
-    if(!product){
+    if(!product || product.length === 0){
         throw {status: 404, message: 'Product not found'};
     }
     return product;
