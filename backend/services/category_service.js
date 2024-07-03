@@ -71,8 +71,6 @@ const deleteCategoryService = async(id) => {
     if(category === 0){
         throw {status: 404, message: 'Category not found'};
     }
-
-    return category;
 }
 
 
